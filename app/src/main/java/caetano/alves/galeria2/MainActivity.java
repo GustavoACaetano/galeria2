@@ -4,13 +4,25 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    // Lista que vai armazenar todos os caminhos para as fotos
+    List<String> photos = new ArrayList<>();
+
+    // Classe que vai construir e preencher a RecyclerView
+    MainAdapter mainAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +31,32 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.tbMain); // Capturando a toolbar criada
         setSupportActionBar(toolbar); // Setando a toolbar na página main
+
+        File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES); // Acessa o diretório das fotos
+        File[] files = dir.listFiles(); // Lê a lista de fotos salvas
+        // Adiciona na lista de fotos
+        for(int i = 0; i < files.length; i++) {
+            photos.add(files[i].getAbsolutePath());
+        }
+
+        // Cria o adapter
+        mainAdapter = new MainAdapter(MainActivity.this, photos);
+
+        // Captura o recyclerView
+        RecyclerView rvGallery = findViewById(R.id.rvGallery);
+
+        // Seta o adapter no recyclerView
+        rvGallery.setAdapter(mainAdapter);
+
+        // Tamanho da tela
+        float w = getResources().getDimension(R.dimen.itemWidth);
+
+        // Numero de colunas que cabem na tela
+        int numberOfColumns = Utils.calculateNoOfColumns(MainActivity.this, w);
+
+        // Configurando o recycleView conforme o numero de colunas calculado
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, numberOfColumns);
+        rvGallery.setLayoutManager(gridLayoutManager);
     }
 
     @Override

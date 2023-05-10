@@ -24,8 +24,6 @@
 
         </provider>
 
-
-
         <activity
             android:name=".PhotoActivity"
             android:parentActivityName=".MainActivity"
