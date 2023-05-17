@@ -4,14 +4,19 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import androidx.appcompat.widget.Toolbar;
 
 public class PhotoActivity extends AppCompatActivity {
+
+    String photoPath; // Caminho para foto que deverá ser aberta
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +28,13 @@ public class PhotoActivity extends AppCompatActivity {
 
         ActionBar actionbar = getSupportActionBar(); // Capturando a actionbar que acabamos de definir acima
         actionbar.setDisplayHomeAsUpEnabled(true); // Habilitando o botão de voltar
+
+        Intent i = getIntent(); // Capturando a intent
+        photoPath = i.getStringExtra("photo_path"); // Caminho da foto que deve ser aberta
+
+        Bitmap bitmap = Utils.getBitmap(photoPath); // Transformando a foto para bitmap
+        ImageView imPhoto = findViewById(R.id.imPhoto); // Capturando o imageView que deve mostrar a imagem
+        imPhoto.setImageBitmap(bitmap); // Colocando o bitmap no imageView
     }
 
     @Override
