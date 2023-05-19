@@ -1,4 +1,4 @@
-package caetano.alves.galeria2;
+package caetano.alves.galeria2.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -17,6 +17,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
 import java.io.File;
+
+import caetano.alves.galeria2.R;
+import caetano.alves.galeria2.model.Utils;
 
 public class PhotoActivity extends AppCompatActivity {
 

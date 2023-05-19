@@ -1,6 +1,7 @@
-package caetano.alves.galeria2;
+package caetano.alves.galeria2.adapter;
 
 import android.graphics.Bitmap;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -9,6 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+
+import caetano.alves.galeria2.R;
+import caetano.alves.galeria2.activity.MainActivity;
+import caetano.alves.galeria2.model.Utils;
 
 // Classe para construir e preencher a RecyclerView
 public class MainAdapter extends RecyclerView.Adapter{
@@ -28,13 +33,16 @@ public class MainAdapter extends RecyclerView.Adapter{
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        LayoutInflater inflater = LayoutInflater.from(mainActivity); // Criando um inflater pra ler o XML da pagina inicial e criar os elementos de interface
+        View v = inflater.inflate(R.layout.list_item,parent,false); // Criando os elementos de interface
+        return new MyViewHolder(v); // Retornando o holder com os elementos da view;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         // ImageView que vai receber a foto
-        ImageView imPhoto = holder.itemView.findViewById(R.id.imItem);
+        View v = holder.itemView;
+        ImageView imPhoto = v.findViewById(R.id.imItem);
 
         // Tamanho da largura do item
         int w = (int) mainActivity.getResources().getDimension(R.dimen.itemWidth);
@@ -59,6 +67,6 @@ public class MainAdapter extends RecyclerView.Adapter{
 
     @Override
     public int getItemCount() {
-        return 0;
+        return photos.size();
     }
 }

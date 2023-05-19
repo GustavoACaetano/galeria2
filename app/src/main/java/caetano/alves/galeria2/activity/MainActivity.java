@@ -1,4 +1,4 @@
-package caetano.alves.galeria2;
+package caetano.alves.galeria2.activity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +33,10 @@ import java.util.Date;
 import java.util.List;
 
 import android.Manifest;
+
+import caetano.alves.galeria2.adapter.MainAdapter;
+import caetano.alves.galeria2.R;
+import caetano.alves.galeria2.model.Utils;
 
 public class MainActivity extends AppCompatActivity {
     // Lista que vai armazenar todos os caminhos para as fotos

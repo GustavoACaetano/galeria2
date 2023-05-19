@@ -1,4 +1,4 @@
-package caetano.alves.galeria2;
+package caetano.alves.galeria2.model;
 
 import android.content.Context;
 import android.graphics.Bitmap;
