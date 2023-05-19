@@ -2,10 +2,13 @@ package caetano.alves.galeria2;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +20,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +31,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import android.Manifest;
 
 public class MainActivity extends AppCompatActivity {
     // Lista que vai armazenar todos os caminhos para as fotos
@@ -72,6 +78,15 @@ public class MainActivity extends AppCompatActivity {
         // Configurando o recycleView conforme o numero de colunas calculado
         GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, numberOfColumns);
         rvGallery.setLayoutManager(gridLayoutManager);
+
+        // Lista de permissões
+        List<String> permissions = new ArrayList<>();
+
+        // Adiciona a permissão de usar a camera
+        permissions.add(Manifest.permission.CAMERA);
+
+        // Checa as permissões
+        checkForPermissions(permissions);
     }
 
     @Override
@@ -181,14 +196,58 @@ public class MainActivity extends AppCompatActivity {
                 permissionsNotGranted.add(permission);
             }
         }
+
+        // Verifica se a versão do kit de desenvolver é igual ou superior a versão marshmallow do android
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Se existirem permissões que não foram autorizadas
             if(permissionsNotGranted.size() > 0) {
+                // Solicita as permissões
                 requestPermissions(permissionsNotGranted.toArray(new String[permissionsNotGranted.size()]),RESULT_REQUEST_PERMISSION);
             }
         }
     }
 
-    private boolean
+    private boolean hasPermission(String permission) {
+        // Verifica se a versão do kit de desenvolver é igual ou superior a versão marshmallow do android
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Checa se o aplicativo tem a permissão
+            return ActivityCompat.checkSelfPermission(MainActivity.this, permission) == PackageManager.PERMISSION_GRANTED;
+        }
+        return false;
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // Lista de permissões rejeitadas
+        final List<String> permissionsRejected = new ArrayList<>();
+
+        if(requestCode == RESULT_REQUEST_PERMISSION) {
+            // Verifica se as permissões estão negadas
+            for(String permission : permissions) {
+                if(!hasPermission(permission)) {
+                    permissionsRejected.add(permission);
+                }
+            }
+        }
+
+        // Se ainda estiver alguma permissão rejeitada
+        if (permissionsRejected.size() > 0){
+            // Verifica se a versão do kit de desenvolver é igual ou superior a versão marshmallow do android
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if(shouldShowRequestPermissionRationale(permissionsRejected.get(0))){
+                    // Alerta para pedir a permissão necessária
+                    new AlertDialog.Builder(MainActivity.this).setMessage("Para usar essa app é preciso conceder essas permissões").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        // Pede as permissões mais uma vez
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            requestPermissions(permissionsRejected.toArray(new String[permissionsRejected.size()]), RESULT_REQUEST_PERMISSION);
+                        }
+                    }).create().show();
+                }
+            }
+        }
+    }
 
 }
